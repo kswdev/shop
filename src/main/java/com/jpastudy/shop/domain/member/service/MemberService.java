@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 
 @RequiredArgsConstructor
 @Service
@@ -25,7 +24,7 @@ public class MemberService {
 
     private void validateDuplicateMember(Member member) {
         List<Member> findMember = memberRepository.findByName(member.getUsername());
-        if (findMember.size() > 0) {
+        if (!findMember.isEmpty()) {
             throw new IllegalStateException("이미 존재하는 회원입니다.");
         }
     }

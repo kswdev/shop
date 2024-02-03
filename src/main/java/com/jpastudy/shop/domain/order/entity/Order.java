@@ -1,5 +1,6 @@
 package com.jpastudy.shop.domain.order.entity;
 
+import com.jpastudy.shop.domain.delivery.dto.DeliveryStatus;
 import com.jpastudy.shop.domain.delivery.enitty.Delivery;
 import com.jpastudy.shop.domain.member.entity.Member;
 import com.jpastudy.shop.domain.order.dto.OrderStatus;
@@ -39,10 +40,10 @@ public class Order {
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
 
-    private LocalDateTime date;
+    private LocalDateTime orderDate;
 
     @Enumerated(EnumType.STRING)
-    private OrderStatus orderStatus;
+    private OrderStatus status;
 
     //==연관관계 메서드==//
     public void setMember(Member member) {
@@ -58,5 +59,37 @@ public class Order {
     public void setDelivery(Delivery delivery) {
         this.delivery = delivery;
         delivery.setOrder(this);
+    }
+
+    //==생성 메서드==//
+    public static Order createOrder(Member member, Delivery delivery, OrderItem... orderItems) {
+        Order order = new Order();
+        order.setMember(member);
+        order.setDelivery(delivery);
+
+        for (OrderItem orderItem : orderItems)
+            order.addOrderItem(orderItem);
+
+        order.setStatus(OrderStatus.ORDER);
+        order.setOrderDate(LocalDateTime.now());
+        return order;
+    }
+
+    //==비즈니스 로직==//
+    public void cancel() {
+        if (delivery.getStatus() == DeliveryStatus.COMP)
+            throw new IllegalStateException("이미 배송이 완료된 상품입니다.");
+
+        this.setStatus(OrderStatus.CANCEL);
+
+        for (OrderItem orderItem : orderItems)
+            orderItem.cancel();
+    }
+
+    //==조회 로직==//
+    public int getTotalPrice() {
+        return orderItems.stream()
+                .mapToInt(OrderItem::getTotalPrice)
+                .sum();
     }
 }
