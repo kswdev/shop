@@ -1,5 +1,6 @@
 package com.jpastudy.shop.domain.order.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jpastudy.shop.domain.item.entity.Item;
 import jakarta.persistence.*;
 import lombok.Getter;

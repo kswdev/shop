@@ -1,4 +1,4 @@
-package com.jpastudy.shop.application.controller;
+package com.jpastudy.shop.controller;
 
 import com.jpastudy.shop.domain.common.Address;
 import com.jpastudy.shop.domain.member.dto.MemberForm;

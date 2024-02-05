@@ -1,4 +1,4 @@
-package com.jpastudy.shop.application.controller;
+package com.jpastudy.shop.controller;
 
 import com.jpastudy.shop.application.usacase.OrderUsacase;
 import com.jpastudy.shop.domain.item.entity.Item;

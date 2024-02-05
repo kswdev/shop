@@ -1,4 +1,4 @@
-package com.jpastudy.shop.application.controller;
+package com.jpastudy.shop.controller;
 
 import com.jpastudy.shop.domain.item.dto.BookForm;
 import com.jpastudy.shop.domain.item.entity.Book;

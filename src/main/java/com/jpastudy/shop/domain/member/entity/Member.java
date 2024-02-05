@@ -1,5 +1,6 @@
 package com.jpastudy.shop.domain.member.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jpastudy.shop.domain.common.Address;
 import com.jpastudy.shop.domain.order.entity.Order;
 import jakarta.persistence.*;
@@ -21,6 +22,7 @@ public class Member {
     @Embedded
     private Address address;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
 }
