@@ -2,12 +2,12 @@ package com.jpastudy.shop.application.usacase;
 
 import com.jpastudy.shop.domain.delivery.enitty.Delivery;
 import com.jpastudy.shop.domain.item.entity.Item;
-import com.jpastudy.shop.domain.item.service.ItemService;
+import com.jpastudy.shop.domain.item.repository.ItemRepository;
 import com.jpastudy.shop.domain.member.entity.Member;
-import com.jpastudy.shop.domain.member.service.MemberService;
+import com.jpastudy.shop.domain.member.repository.MemberRepository;
 import com.jpastudy.shop.domain.order.entity.Order;
 import com.jpastudy.shop.domain.order.entity.OrderItem;
-import com.jpastudy.shop.domain.order.service.OrderService;
+import com.jpastudy.shop.domain.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,9 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class OrderUsacase {
 
-    private final OrderService orderService;
-    private final MemberService memberService;
-    private final ItemService itemService;
+    private final OrderRepository orderRepository;
+    private final MemberRepository memberRepository;
+    private final ItemRepository itemRepository;
 
 
     //주문
@@ -27,8 +27,8 @@ public class OrderUsacase {
     public Long order(Long memberId, Long itemId, int count) {
 
         //엔티티 조회
-        Member member = memberService.findOne(memberId);
-        Item item = itemService.findItem(itemId);
+        Member member = memberRepository.find(memberId);
+        Item item = itemRepository.find(itemId);
 
         //배송정보 생성
         Delivery delivery = new Delivery();
@@ -39,7 +39,8 @@ public class OrderUsacase {
 
         //주문 생성
         Order order = Order.createOrder(member, delivery, orderItem);
+        orderRepository.save(order);
 
-        return orderService.save(order);
+        return order.getId();
     }
 }

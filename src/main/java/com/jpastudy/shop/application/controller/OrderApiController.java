@@ -6,7 +6,9 @@ import com.jpastudy.shop.domain.order.dto.OrderStatus;
 import com.jpastudy.shop.domain.order.entity.Order;
 import com.jpastudy.shop.domain.order.entity.OrderItem;
 import com.jpastudy.shop.domain.order.repository.OrderRepository;
-import lombok.Data;
+import com.jpastudy.shop.domain.order.repository.query.OrderFlatDto;
+import com.jpastudy.shop.domain.order.repository.query.OrderQueryDto;
+import com.jpastudy.shop.domain.order.repository.query.OrderQueryRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +23,7 @@ import java.util.List;
 public class OrderApiController {
 
     private final OrderRepository orderRepository;
+    private final OrderQueryRepository orderQueryRepository;
 
     @GetMapping("/api/v1/orders")
     public List<OrderDto> ordersV1() {
@@ -44,6 +47,21 @@ public class OrderApiController {
         return orderRepository.findAllWithMemberDelivery(offset, limit).stream()
                 .map(OrderDto::new)
                 .toList();
+    }
+
+    @GetMapping("/api/v3/orders")
+    public List<OrderQueryDto> ordersV3() {
+        return orderQueryRepository.findOrderQueryDtos();
+    }
+
+    @GetMapping("/api/v4/orders")
+    public List<OrderQueryDto> ordersV4() {
+        return orderQueryRepository.findAllByDto_optimization();
+    }
+
+    @GetMapping("/api/v5/orders")
+    public List<OrderFlatDto> ordersV5() {
+        return orderQueryRepository.findAllByDto_flat();
     }
 
     @Getter
