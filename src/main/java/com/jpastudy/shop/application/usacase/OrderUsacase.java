@@ -27,7 +27,7 @@ public class OrderUsacase {
     public Long order(Long memberId, Long itemId, int count) {
 
         //엔티티 조회
-        Member member = memberRepository.find(memberId);
+        Member member = memberRepository.findById(memberId).get();
         Item item = itemRepository.find(itemId);
 
         //배송정보 생성

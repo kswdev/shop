@@ -44,7 +44,7 @@ class OrderUsacaseTest {
         Long orderId = orderUsacase.order(member.getId(), book.getId(), count);
 
         // Then
-        Order getorder = orderRepository.find(orderId);
+        Order getorder = orderRepository.findById(orderId);
 
         assertEquals(OrderStatus.ORDER, getorder.getStatus(),
                 "상품 주문시 상태는 ORDER");

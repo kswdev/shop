@@ -27,7 +27,7 @@ public class OrderService {
     public void cancelOrder(Long orderId) {
 
         //주문 조회
-        Order order = orderRepository.find(orderId);
+        Order order = orderRepository.findById(orderId);
 
         //주문 취소
         order.cancel();

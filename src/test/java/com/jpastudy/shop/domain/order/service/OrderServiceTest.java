@@ -44,7 +44,7 @@ class OrderServiceTest {
         orderService.cancelOrder(orderId);
 
         // Then
-        Order getOrder = orderRepository.find(orderId);
+        Order getOrder = orderRepository.findById(orderId);
 
         assertEquals(OrderStatus.CANCEL, getOrder.getStatus(),
                 "주문 취소시 상태는 CANCEL");

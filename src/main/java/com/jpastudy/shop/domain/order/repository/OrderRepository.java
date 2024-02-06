@@ -1,8 +1,12 @@
 package com.jpastudy.shop.domain.order.repository;
 
+import com.jpastudy.shop.domain.member.entity.QMember;
 import com.jpastudy.shop.domain.order.dto.OrderSearch;
-import com.jpastudy.shop.domain.order.repository.OrderSimpleQueryRepository.OrderSimpleQueryDto;
+import com.jpastudy.shop.domain.order.dto.OrderStatus;
 import com.jpastudy.shop.domain.order.entity.Order;
+import com.jpastudy.shop.domain.order.entity.QOrder;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
@@ -11,7 +15,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -24,7 +27,7 @@ public class OrderRepository {
         em.persist(order);
     }
 
-    public Order find(Long id) {
+    public Order findById(Long id) {
         return em.find(Order.class, id);
     }
 
@@ -37,7 +40,36 @@ public class OrderRepository {
                 .setMaxResults(1000)
                 .getResultList();
      */
+
     public List<Order> findAll(OrderSearch orderSearch) {
+        QOrder order = QOrder.order;
+        QMember member = QMember.member;
+
+        JPAQueryFactory query = new JPAQueryFactory(em);
+        return query
+                .select(order)
+                .from(order)
+                .join(order.member, member)
+                .where(statusEq(orderSearch.getOrderStatus()), nameLike(orderSearch.getMemberName()))
+                .limit(1000)
+                .fetch();
+    }
+
+    private static BooleanExpression nameLike(String memberName) {
+        if (StringUtils.hasText(memberName)) {
+            return null;
+        }
+        return QMember.member.username.like(memberName);
+    }
+
+    private BooleanExpression statusEq(OrderStatus statusCond) {
+        if (statusCond == null) {
+            return null;
+        }
+        return QOrder.order.status.eq(statusCond);
+    }
+
+    public List<Order> findAll2(OrderSearch orderSearch) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Order> cq = cb.createQuery(Order.class);
         Root<Order> o = cq.from(Order.class);
